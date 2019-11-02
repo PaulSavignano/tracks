@@ -1,34 +1,43 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import {
-  View,
-  StyleSheet,
-  Text,
-  Button
-} from 'react-native'
+import { NavigationEvents } from 'react-navigation'
+import { View, StyleSheet } from 'react-native'
+
+import AuthForm from '../components/AuthForm'
+import NavLink from '../components/NavLink'
+import { Context as AuthContext } from '../context/AuthContext'
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: 30
-  }
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    marginBottom: 250,
+  },
 })
 
-function SignupScreen({ navigation }) {
+function SignupScreen() {
+  const { state, onSignup, onDeleteError } = useContext(AuthContext)
   return (
-    <>
-      <Text style={styles.text}>
-        SignupScreen
-      </Text>
-      <Button
-        onPress={() => navigation.navigate('Signin')}
-        title="Go to Signin"
+    <View style={styles.container}>
+      <NavigationEvents onWillBlur={onDeleteError} />
+      <AuthForm
+        error={state.error}
+        headerText="Sign Up"
+        onSubmit={onSignup}
+        submitButtonText="Sign Up"
+        isFetching={state.isFetching}
       />
-      <Button
-        onPress={() => navigation.navigate('mainFlow')}
-        title="Go to mainFlow"
-      />
-    </>
+      <NavLink route="Signin">
+        Already have an account?  Sign in instead.
+      </NavLink>
+    </View>
   )
+}
+
+SignupScreen.navigationOptions = () => {
+  return {
+    header: null
+  }
 }
 
 SignupScreen.propTypes = {
